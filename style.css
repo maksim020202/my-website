@@ -1,0 +1,733 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #252525;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #4CAF50;
+    margin: 0;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.auth-btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-btn:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.drop-zone {
+    border: 2px dashed #666;
+    border-radius: 5px;
+    padding: 50px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.drop-zone.active {
+    background: #333;
+    border-color: #4CAF50;
+}
+
+#file-browser {
+    color: #4CAF50;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.playlist-container {
+    background: #252525;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.playlist-header {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: #333;
+    flex-wrap: wrap;
+}
+
+.playlist {
+    height: 300px;
+    overflow-y: auto;
+    background: #1e1e1e;
+    position: relative;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.track.selected {
+    background: #4CAF50;
+}
+
+.track:hover {
+    background: #333;
+}
+
+.track-name {
+    flex-grow: 1;
+}
+
+.track-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.track-controls .play-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    min-width: 60px;
+}
+
+.track-controls .play-btn:hover {
+    background: #45a049;
+}
+
+button {
+    transition: all 0.3s ease;
+}
+
+.control-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.control-btn:hover {
+    background: #45a049;
+}
+
+.control-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.waveform-container {
+    width: 100%;
+    height: 100px;
+    background: #252525;
+    margin-bottom: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.record-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.round-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.record-btn {
+    background: #f44336;
+    color: white;
+}
+
+.stop-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.play-pause-btn {
+    background: #2196F3;
+    color: white;
+}
+
+.round-btn:hover {
+    transform: scale(1.1);
+}
+
+.round-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #252525;
+    margin: 10% auto;
+    padding: 25px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+.modal h2 {
+    margin-bottom: 20px;
+    color: #4CAF50;
+    text-align: center;
+}
+
+.modal-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.modal-btn:hover {
+    background: #45a049;
+}
+
+#auth-modal input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #666;
+    background: #333;
+    color: white;
+    font-size: 16px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 12px;
+    display: none;
+    margin-top: 5px;
+}
+
+input.error {
+    border-color: #f44336 !important;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    display: block !important;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+.auth-link {
+    color: #4CAF50;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.auth-link:hover {
+    color: #45a049;
+}
+
+.metronome-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.effect-params {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tracks-display {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.track-container {
+    flex: 1;
+    background: #252525;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.track-container h3 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.track-waveform {
+    height: 120px;
+    margin-bottom: 10px;
+    background: #1e1e1e;
+    border-radius: 4px;
+}
+
+.track-play-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.track-play-btn:hover {
+    transform: scale(1.1);
+}
+
+.track-play-btn.playing {
+    background: #f44336 !important;
+}
+
+.track-play-btn.playing i {
+    transform: translateX(1px);
+}
+
+.vocal-play-btn {
+    background: #ff5722;
+}
+
+.beat-play-btn {
+    background: #2196F3;
+}
+
+.track-control {
+    background: #252525;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.effect-params label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.effect-params input[type="range"] {
+    width: 70%;
+}
+
+.value, .volume-value {
+    display: inline-block;
+    width: 30px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.pan-control {
+    background: #252525;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.pan-visual {
+    width: 100%;
+    height: 30px;
+    background: #333;
+    position: relative;
+    margin-top: 15px;
+    border-radius: 15px;
+}
+
+.pan-indicator {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #4CAF50;
+    border-radius: 50%;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: left 0.2s;
+}
+
+.preview-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.preview-btn {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.preview-btn:hover {
+    background: #1976D2;
+}
+
+.stop-preview-btn {
+    background: #ff9800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.stop-preview-btn:hover {
+    background: #f57c00;
+}
+
+.back-btn {
+    background: #9e9e9e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    background: #757575;
+}
+
+.export-btn {
+    background: #673AB7;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.export-btn:hover {
+    background: #5E35B1;
+}
+
+.effect-mode {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.effect-mode-btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.effect-mode-btn.active {
+    background: #4CAF50;
+}
+
+.effect-mode-btn:hover {
+    background: #3e8e41;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.confirm-buttons button {
+    padding: 10px 20px;
+    min-width: 100px;
+}
+
+.waveform-container .cursor-ghost {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    z-index: 5;
+    pointer-events: none;
+    display: none;
+}
+
+.waveform-container:hover .cursor-ghost {
+    display: block;
+}
+
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.user-avatar i {
+    color: white;
+    font-size: 18px;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #252525;
+    border-radius: 5px;
+    padding: 15px;
+    width: 200px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 1000;
+    border: 1px solid #333;
+}
+
+.user-dropdown.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.user-avatar-dropdown {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.user-avatar-dropdown i {
+    color: white;
+    font-size: 20px;
+}
+
+.logout-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background: #d32f2f;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .tracks-display {
+        flex-direction: column;
+    }
+    
+    .preview-controls {
+        flex-wrap: wrap;
+    }
+}

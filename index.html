@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL RecLine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/wavesurfer.js@7"></script>
+</head>
+<body>
+    <header class="main-header">
+        <h1 class="logo">FL RecLine</h1>
+        <div class="auth-buttons">
+            <button id="login-btn" class="auth-btn">Log In</button>
+            <button id="signup-btn" class="auth-btn">Sign Up</button>
+            <div id="user-menu" class="user-menu" style="display: none;">
+                <div class="user-avatar" id="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-dropdown">
+                    <div class="user-info">
+                        <div class="user-avatar-dropdown">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span id="username-display"></span>
+                    </div>
+                    <button id="logout-btn" class="logout-btn">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="auth-modal-title">Вход</h2>
+            <div id="login-form">
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <span class="error-message" id="login-email-error"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                    <i class="fas fa-eye password-toggle"></i>
+                    <span class="error-message" id="login-password-error"></span>
+                </div>
+                <button id="submit-login" class="modal-btn">Войти</button>
+                <p id="auth-switch">Нет аккаунта? <span class="auth-link">Зарегистрируйтесь</span></p>
+            </div>
+            <div id="signup-form" style="display: none;">
+                <div class="input-group">
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <span class="error-message" id="signup-email-error"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="signup-username" placeholder="Никнейм" required>
+                    <span class="error-message" id="signup-username-error"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-password" placeholder="Пароль" required>
+                    <i class="fas fa-eye password-toggle"></i>
+                    <span class="error-message" id="signup-password-error"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="signup-confirm" placeholder="Повторите пароль" required>
+                    <i class="fas fa-eye password-toggle"></i>
+                    <span class="error-message" id="signup-confirm-error"></span>
+                </div>
+                <button id="submit-signup" class="modal-btn">Зарегистрироваться</button>
+                <p id="auth-switch">Уже есть аккаунт? <span class="auth-link">Войдите</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="main-container">
+        <div class="drop-zone" id="drop-zone">
+            <p>Перетащите сюда ваш бит (MP3, WAV)</p>
+            <p>Или <span id="file-browser">выберите файл</span></p>
+            <input type="file" id="file-input" accept="audio/*" style="display: none;">
+        </div>
+        
+        <div class="playlist-container">
+            <div class="playlist-header">
+                <button id="delete-btn" class="control-btn">Удалить (Del)</button>
+                <button id="mix-btn" class="control-btn" disabled>Сведение</button>
+            </div>
+            <div class="playlist" id="playlist"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="waveform-container" id="beat-waveform"></div>
+            <div class="metronome-toggle">
+                <span>Метроном:</span>
+                <label class="switch">
+                    <input type="checkbox" id="metronome-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="record-controls">
+                <button id="record-stop-btn" class="round-btn record-btn" title="Запись вокала (R)">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button id="play-pause-btn" class="round-btn play-pause-btn" title="Play/Pause (Space)">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content">
+                <p>Хотите удалить предыдущую запись?</p>
+                <div class="confirm-buttons">
+                    <button id="confirm-delete" class="modal-btn">Удалить</button>
+                    <button id="confirm-keep" class="modal-btn">Оставить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mixer-container" class="container" style="display: none;">
+        <h2>Настройки сведения</h2>
+        
+        <div class="tracks-display">
+            <div class="track-container">
+                <h3>Вокал</h3>
+                <div class="track-waveform" id="vocal-waveform"></div>
+                <button class="track-play-btn vocal-play-btn" data-type="vocal">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+            <div class="track-container">
+                <h3>Бит</h3>
+                <div class="track-waveform" id="beat-waveform-mix"></div>
+                <button class="track-play-btn beat-play-btn" data-type="beat">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mixer-controls">
+            <div class="track-control">
+                <h3>Вокал</h3>
+                <label>Громкость: 
+                    <input type="range" id="vocal-volume" min="0" max="2" step="0.1" value="1">
+                    <span class="volume-value">1.0</span>
+                </label>
+                
+                <div class="effect-toggle">
+                    <span>Реверберация:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="vocal-reverb" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="effect-params" id="vocal-reverb-params">
+                    <label>Уровень: 
+                        <input type="range" id="vocal-reverb-level" min="0" max="1" step="0.1" value="0.5">
+                        <span class="value">0.5</span>
+                    </label>
+                    <label>Декей: 
+                        <input type="range" id="vocal-reverb-decay" min="0.1" max="3" step="0.1" value="2">
+                        <span class="value">2.0</span>
+                    </label>
+                </div>
+
+                <div class="effect-toggle">
+                    <span>Эквалайзер:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="vocal-eq" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="effect-params" id="vocal-eq-params">
+                    <label>Низкие: 
+                        <input type="range" id="vocal-eq-bass" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Низкие-средние: 
+                        <input type="range" id="vocal-eq-lowmid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Средние: 
+                        <input type="range" id="vocal-eq-mid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Средние-высокие: 
+                        <input type="range" id="vocal-eq-highmid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Высокие: 
+                        <input type="range" id="vocal-eq-treble" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="track-control">
+                <h3>Музыка</h3>
+                <label>Громкость: 
+                    <input type="range" id="beat-volume" min="0" max="2" step="0.1" value="1">
+                    <span class="volume-value">1.0</span>
+                </label>
+                
+                <div class="effect-toggle">
+                    <span>Эквалайзер:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="beat-eq" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="effect-params" id="beat-eq-params">
+                    <label>Низкие: 
+                        <input type="range" id="eq-bass" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Низкие-средние: 
+                        <input type="range" id="eq-lowmid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Средние: 
+                        <input type="range" id="eq-mid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Средние-высокие: 
+                        <input type="range" id="eq-highmid" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                    <label>Высокие: 
+                        <input type="range" id="eq-treble" min="-20" max="20" value="0">
+                        <span class="value">0</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="pan-control">
+                <h3>Панорама</h3>
+                <label>Расположение: 
+                    <input type="range" id="pan-position" min="-1" max="1" step="0.1" value="0">
+                    <span class="value">0</span>
+                </label>
+                <div class="pan-visual">
+                    <div class="pan-indicator" id="pan-indicator"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-controls">
+            <button id="preview-btn" class="preview-btn">Прослушать микс</button>
+            <button id="stop-preview-btn" class="stop-preview-btn" style="display: none;">Пауза</button>
+            <button id="back-btn" class="back-btn">Назад к записи</button>
+            <button id="export-mix-btn" class="export-btn">Экспорт</button>
+        </div>
+        
+        <div id="mix-export-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Экспорт проекта</h2>
+                <div class="export-options">
+                    <button id="mix-export-wav" class="export-btn">Скачать микс .wav</button>
+                    <button id="mix-export-mp3" class="export-btn">Скачать микс .mp3</button>
+                    <button id="mix-export-vocal-wav" class="export-btn">Скачать вокал .wav</button>
+                    <button id="mix-export-vocal-mp3" class="export-btn">Скачать вокал .mp3</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/recorderjs@1.0.1/dist/recorder.js"></script>
+    <script src="script.js"></script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDMIOhibj4Bce41Lk32WtIbjIAjxc2Nrig",
+    authDomain: "recline-57180.firebaseapp.com",
+    projectId: "recline-57180",
+    storageBucket: "recline-57180.firebasestorage.app",
+    messagingSenderId: "448923975742",
+    appId: "1:448923975742:web:f6a718168e4f160216916f",
+    measurementId: "G-7P195J8X7T"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</body>
+</html>
